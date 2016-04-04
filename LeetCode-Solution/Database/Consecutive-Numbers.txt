@@ -1,0 +1,16 @@
+# Write your MySQL query statement below
+
+select distinct a1.Num from Logs as a1, Logs as a2, Logs as a3 where a1.Num=a2.Num and a2.Num=a3.Num and a1.Id+1=a2.Id and a2.Id+1=a3.Id;
+
+
+
+# 这是一个效率更高的查询
+select DISTINCT num FROM
+(select num,
+    case 
+        when @record = num then @count:=@count+1
+        when @record <> @record:=num then @count:=1 end as n
+    from 
+        Logs ,(select @count:=0,@record:=(SELECT num from Logs limit 0,1)) r
+) as a
+where a.n>=3
